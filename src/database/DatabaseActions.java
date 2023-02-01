@@ -1,3 +1,4 @@
+package database;
 import java.sql.*;
 import java.util.ArrayList;
 import com.mysql.cj.jdbc.MysqlDataSource;
@@ -67,6 +68,24 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 		}
 
 		return emails;
-		
+	}
+	
+	// Pass in a user's email address and return whether they are an authorized (insurance or maintainer) user type
+	public boolean isAuthorized(String email) {
+			
+		try {
+			Statement stmt;
+			stmt = conn.createStatement();
+			ResultSet rs;
+			rs = stmt.executeQuery("SELECT account_type FROM users WHERE email_address = '" + email + "'");
+			rs.next();
+			String type = rs.getString("account_type");
+			if (type == "insurance" || type == "maintainer")
+				return true;
+			return false;
+		} catch (SQLException e) {
+			// Necessary for when a non-existent user/email is attempted
+			return false;
+		}	
 	}
 }
