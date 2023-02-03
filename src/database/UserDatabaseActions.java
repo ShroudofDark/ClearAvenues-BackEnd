@@ -1,9 +1,12 @@
 package database;
-import java.sql.*;
 import java.util.ArrayList;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UserDatabaseActions {
 
@@ -14,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 	}
 	
 	// Closes database connection
-	private void finalize() {
+	protected void finalize() {
 		
 		closeConnection();		
 	}
@@ -34,7 +37,7 @@ import java.security.NoSuchAlgorithmException;
 			Statement stmt = conn.createStatement();
 			stmt.execute("use clear_avenues_db");
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -44,7 +47,7 @@ import java.security.NoSuchAlgorithmException;
 	private void closeConnection() {	
 		try {
 			conn.close();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -55,16 +58,16 @@ import java.security.NoSuchAlgorithmException;
 	{
 		ArrayList<String> emails = new ArrayList<String>();
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT email_address FROM users");
+			final Statement stmt = conn.createStatement();
+			final ResultSet rs = stmt.executeQuery("SELECT email_address FROM users");
 			
 			while(rs.next())
 			{
-				String email = rs.getString("email_address");
+				final String email = rs.getString("email_address");
 				emails.add(email);
 			}
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -77,29 +80,25 @@ import java.security.NoSuchAlgorithmException;
 	public boolean isAuthorized(String email) {
 			
 		try {
-			Statement stmt;
-			stmt = conn.createStatement();
-			ResultSet rs;
-			rs = stmt.executeQuery("SELECT account_type FROM users WHERE email_address = '" + email + "'");
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT account_type FROM users WHERE email_address = '" + email + "'");
 			rs.next();
-			String type = rs.getString("account_type");
+			final String type = rs.getString("account_type");
 			if (type == "insurance" || type == "maintainer")
 				return true;
 			return false;
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// Necessary for when a non-existent user/email is attempted
 			return false;
 		}	
 	}
 
 	// Used to create a new user
-	public boolean createNewUser(String email, String displayName, String password, String accountType) {
-		
-		Statement stmt;
+	public boolean createNewUser(final String email, final String displayName, final String password, final String accountType) {
 		
 		// Insert a new row into users table using the provided parameters
 		try {
-			stmt = conn.createStatement();
+			Statement stmt = conn.createStatement();
 			/* Likely need more columns in users table for String location and bool approved
 			 * Location will be state the user is based in (used for authorized user to know what location they have privileges in)
 			 * Approved will be true or false based on whether the State has approved their privileged access
@@ -108,7 +107,7 @@ import java.security.NoSuchAlgorithmException;
 			stmt.execute("INSERT INTO users(email_address, displayName, account_type) VALUES ('" + email + "', '" + displayName + "', '" + accountType + "')");
 		}
 		
-		catch(SQLException e) {
+		catch(final SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -121,21 +120,28 @@ import java.security.NoSuchAlgorithmException;
 	}
 	
 	// Used when setting a password for a new user
-	public boolean setPassword(String email, String newPassword) {
+	private boolean setPassword(final String email, final String newPassword) {
 		
-		String hashedPassword = null;
+		String hashedPassword;
 		
 		// Hash new password
-		hashString(newPassword);
+		try
+		{
+			hashedPassword = hashString(newPassword);
+		}
+		catch(final NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 		
 		// Update user's row in database with their hashed password
 		try {
-			Statement stmt;
-			stmt = conn.createStatement();
+			final Statement stmt = conn.createStatement();
 			stmt.execute("UPDATE users SET password_hash = '" + hashedPassword +"' WHERE email_address = '" + email + "'");
 		}
 		
-		catch(SQLException e) {
+		catch(final SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -144,26 +150,33 @@ import java.security.NoSuchAlgorithmException;
 	}
 	
 	// Used when an existing user wishes to reset an existing password. Must enter old password for validation
-	public boolean resetPassword(String email, String oldPasswordUser, String newPassword) {
+	public boolean resetPassword(final String email, final String oldPasswordUser, final String newPassword) {
 
-		String hashedNewPassword = null;
-		String hashedOldPasswordUser = null;
-		String hashedOldPasswordDb = null;
+		String hashedOldPasswordDb;
+		String hashedOldPasswordUser;
+		String hashedNewPassword;
+		Statement stmt;
 		
 		// Hash old password entered from user
-		hashedOldPasswordUser = hashString(oldPasswordUser);
-		
-		Statement stmt;
+		try
+		{
+			hashedOldPasswordUser = hashString(oldPasswordUser);
+		}
+		catch(final NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 		
 		// Retrieve the user's old password hash from database
 		try {
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT password_hash FROM users WHERE email_address = '" + email + "'");
+			final ResultSet rs = stmt.executeQuery("SELECT password_hash FROM users WHERE email_address = '" + email + "'");
 			rs.next();
 			hashedOldPasswordDb = rs.getString("password_hash");
 		}
 		
-		catch(SQLException e) {
+		catch(final SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -174,7 +187,15 @@ import java.security.NoSuchAlgorithmException;
 			return false;
 		
 		// Hash new password
-		hashedNewPassword = hashString(newPassword);
+		try
+		{
+			hashedNewPassword = hashString(newPassword);
+		}
+		catch(final NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 		
 		// Update database with new password hash
 		try {
@@ -182,36 +203,26 @@ import java.security.NoSuchAlgorithmException;
 			return true;
 		}
 		
-		catch(SQLException e) {
+		catch(final SQLException e) {
 			e.printStackTrace();
 			return false;
 		}	
 	}
 	
-	public String hashString(String toHash) {
+	private String hashString(final String toHash) throws NoSuchAlgorithmException {
 		
 		// Hash text string
 		
-		String hashedString = null;
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(toHash.getBytes());
+		final byte[] bytes = md.digest();
+		StringBuilder sb = new StringBuilder();
 		
-		try {
-			MessageDigest md;
-			md = MessageDigest.getInstance("MD5");
-			md.update(toHash.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			
-			for (int i = 0; i < bytes.length; i++) {
-		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-		    }
-			
-			hashedString = sb.toString();
-		} 
+		for (int i = 0; i < bytes.length; i++) {
+	        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+	    }
 		
-		catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
+		return sb.toString();
 		
-		return hashedString;
 	}
 }
