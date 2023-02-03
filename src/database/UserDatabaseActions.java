@@ -126,24 +126,7 @@ import java.security.NoSuchAlgorithmException;
 		String hashedPassword = null;
 		
 		// Hash new password
-		try {
-			
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(newPassword.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			
-			for (int i = 0; i < bytes.length; i++) {
-		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-		    }
-			
-			hashedPassword = sb.toString();
-		}
-		
-		catch(NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		}
+		hashString(newPassword);
 		
 		// Update user's row in database with their hashed password
 		try {
@@ -168,24 +151,7 @@ import java.security.NoSuchAlgorithmException;
 		String hashedOldPasswordDb = null;
 		
 		// Hash old password entered from user
-		try {
-			
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(oldPasswordUser.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			
-			for (int i = 0; i < bytes.length; i++) {
-		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-		    }
-			
-			hashedOldPasswordUser = sb.toString();
-		}
-		
-		catch(NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		}
+		hashedOldPasswordUser = hashString(oldPasswordUser);
 		
 		Statement stmt;
 		
@@ -208,24 +174,7 @@ import java.security.NoSuchAlgorithmException;
 			return false;
 		
 		// Hash new password
-		try {
-			
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(newPassword.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			
-			for (int i = 0; i < bytes.length; i++) {
-		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-		    }
-			
-			hashedNewPassword = sb.toString();
-		}
-		
-		catch(NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		}
+		hashedNewPassword = hashString(newPassword);
 		
 		// Update database with new password hash
 		try {
@@ -237,5 +186,32 @@ import java.security.NoSuchAlgorithmException;
 			e.printStackTrace();
 			return false;
 		}	
+	}
+	
+	public String hashString(String toHash) {
+		
+		// Hash text string
+		
+		String hashedString = null;
+		
+		try {
+			MessageDigest md;
+			md = MessageDigest.getInstance("MD5");
+			md.update(toHash.getBytes());
+			byte[] bytes = md.digest();
+			StringBuilder sb = new StringBuilder();
+			
+			for (int i = 0; i < bytes.length; i++) {
+		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+		    }
+			
+			hashedString = sb.toString();
+		} 
+		
+		catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
+		return hashedString;
 	}
 }

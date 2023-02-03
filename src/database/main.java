@@ -15,7 +15,7 @@ public class main {
 		//boolean authorized = dbConnection.isAuthorized("fm");
 		//System.out.println(authorized);
 		
-		//dbConnection.createNewUser("mwils031@odu.edu_duplicate", "Matthew Wilson", "password1", "maintainer");
-		dbConnection.resetPassword("mwils031@odu.edu", "password1", "test1");
+		dbConnection.createNewUser("mwils031@odu.edu_duplicate1", "Matthew Wilson", "password1", "maintainer");
+		//dbConnection.resetPassword("mwils031@odu.edu", "password1", "test1");
 	}
 }
