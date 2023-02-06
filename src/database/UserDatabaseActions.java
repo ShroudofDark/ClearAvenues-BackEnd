@@ -58,6 +58,7 @@ import java.sql.Statement;
 	}
 	
 	// Retrieves all users email_address from the users table and returns as an ArrayList
+	// Most likely not needed for the application but included for testing purposes
 	public ArrayList<String> getEmails()
 	{
 		ArrayList<String> emails = new ArrayList<String>();
@@ -65,8 +66,7 @@ import java.sql.Statement;
 			final Statement stmt = conn.createStatement();
 			final ResultSet rs = stmt.executeQuery("SELECT email_address FROM users");
 			
-			while(rs.next())
-			{
+			while(rs.next()) {
 				final String email = rs.getString("email_address");
 				emails.add(email);
 			}
