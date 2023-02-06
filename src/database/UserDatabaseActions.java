@@ -37,7 +37,9 @@ import java.sql.Statement;
 			Statement stmt = conn.createStatement();
 			stmt.execute("use clear_avenues_db");
 			stmt.close();
-		} catch (final SQLException e) {
+		} 
+		
+		catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -47,7 +49,9 @@ import java.sql.Statement;
 	private void closeConnection() {	
 		try {
 			conn.close();
-		} catch (final SQLException e) {
+		} 
+		
+		catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -67,7 +71,9 @@ import java.sql.Statement;
 				emails.add(email);
 			}
 			stmt.close();
-		} catch (final SQLException e) {
+		} 
+		
+		catch (final SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -87,7 +93,9 @@ import java.sql.Statement;
 			if (type == "insurance" || type == "maintainer")
 				return true;
 			return false;
-		} catch (final SQLException e) {
+		} 
+		
+		catch (final SQLException e) {
 			// Necessary for when a non-existent user/email is attempted
 			return false;
 		}	
@@ -125,12 +133,10 @@ import java.sql.Statement;
 		String hashedPassword;
 		
 		// Hash new password
-		try
-		{
+		try {
 			hashedPassword = hashString(newPassword);
 		}
-		catch(final NoSuchAlgorithmException e)
-		{
+		catch(final NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -158,12 +164,10 @@ import java.sql.Statement;
 		Statement stmt;
 		
 		// Hash old password entered from user
-		try
-		{
+		try {
 			hashedOldPasswordUser = hashString(oldPasswordUser);
 		}
-		catch(final NoSuchAlgorithmException e)
-		{
+		catch(final NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -187,12 +191,10 @@ import java.sql.Statement;
 			return false;
 		
 		// Hash new password
-		try
-		{
+		try {
 			hashedNewPassword = hashString(newPassword);
 		}
-		catch(final NoSuchAlgorithmException e)
-		{
+		catch(final NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -207,6 +209,21 @@ import java.sql.Statement;
 			e.printStackTrace();
 			return false;
 		}	
+	}
+	
+	// Update user's email
+	public boolean changeEmail(String oldEmail, String newEmail) {
+		
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute("UPDATE users SET email_address = '" + newEmail + "' WHERE email_address = '" + oldEmail + "'");
+		} 
+		
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}	
+		return true;
 	}
 	
 	private String hashString(final String toHash) throws NoSuchAlgorithmException {
