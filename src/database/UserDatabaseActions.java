@@ -226,6 +226,24 @@ import java.sql.Statement;
 		return true;
 	}
 	
+	// Used to validate user credentials for login
+	public boolean userLogin(String email, String password) {
+		
+		try {
+		Statement stmt = conn.createStatement();
+		final ResultSet rs = stmt.executeQuery("SELECT password_hash FROM users WHERE email_address = '" + email + "'");
+		rs.next();
+		if (rs.getString("password_hash").equals(hashString(password)))
+			return true;
+		}
+		
+		catch (SQLException | NoSuchAlgorithmException  e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	private String hashString(final String toHash) throws NoSuchAlgorithmException {
 		
 		// Hash text string
