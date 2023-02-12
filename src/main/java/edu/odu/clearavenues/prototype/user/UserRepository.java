@@ -16,6 +16,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     // This method will return all users of a specific account Type
     Iterable<User> findByAccountType(String type);
 
+    User findByEmailAddress(String email_address);
+
 
     // However, you can still write a query yourself if you'd like
     @Query(value = "SELECT * FROM users WHERE account_type = :type", nativeQuery = true)
