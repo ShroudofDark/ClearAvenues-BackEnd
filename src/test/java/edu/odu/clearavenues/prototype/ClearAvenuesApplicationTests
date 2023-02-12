@@ -1,0 +1,13 @@
+package edu.odu.clearavenues.prototype;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ClearAvenuesApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
