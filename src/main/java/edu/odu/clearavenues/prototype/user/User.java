@@ -11,7 +11,7 @@ public class User {
     // Default constructor
     protected User() {}
     public enum TYPE {
-        standard, insurance, maintainer,
+        standard, institute, municipality, admin
     }
 
     // Each private variable represents a column in the users table
@@ -60,6 +60,4 @@ public class User {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-
-
 }

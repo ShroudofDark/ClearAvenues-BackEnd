@@ -34,7 +34,12 @@ public class UserController {
         return userRepository.nativeSQLFindByAccountType(type);
     }
 
-    @RequestMapping(value = "/newUser", method = RequestMethod.POST)
+    /* Reminder for later to consider defaulting account_type to standard for all new users and
+       creating a separate function to change a user's account type which will require an existing administrator's
+       username and password to do
+     */
+
+    @PostMapping(value = "/newUser")
     @ResponseBody
     public void createUser(@RequestParam("email_address") String email_address,@RequestParam("display_name") String display_name,@RequestParam("password") String password, @RequestParam("account_type") User.TYPE account_type){
 
@@ -47,7 +52,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+    @PostMapping(value = "/resetPassword")
     @ResponseBody
     public void resetPassword(@RequestParam("email_address") String email_address, @RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
 
