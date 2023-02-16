@@ -39,13 +39,15 @@ public class UserController {
        username and password to do
      */
 
-    @PostMapping(value = "/newUser")
+    @GetMapping(value = "/newUser")
     @ResponseBody
-    public void createUser(@RequestParam("email_address") String email_address,@RequestParam("display_name") String display_name,@RequestParam("password") String password, @RequestParam("account_type") User.TYPE account_type){
+    public void createUser(@RequestParam("email_address") String email_address,@RequestParam("display_name") String display_name,
+                           @RequestParam("password") String password, @RequestParam("account_type") String account_type){
 
         try {
+            User.TYPE type = User.TYPE.valueOf(account_type);
             String hashedPw = hashString(password);
-            User user = new User(email_address, display_name, hashedPw, account_type);
+            User user = new User(email_address, display_name, hashedPw, type);
             userRepository.save(user);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
@@ -54,9 +56,9 @@ public class UserController {
 
     @PostMapping(value = "/resetPassword")
     @ResponseBody
-    public void resetPassword(@RequestParam("email_address") String email_address, @RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
+    public void resetPassword(@RequestParam("email_address") String email_address, @RequestParam("oldPassword") String oldPassword,
+                              @RequestParam("newPassword") String newPassword) {
 
-        //oldHashedPassword = hashString(oldPassword);
         User user = userRepository.findByEmailAddress(email_address);
         try {
             if(user.getPasswordHash().equals(hashString(oldPassword)))
@@ -67,8 +69,18 @@ public class UserController {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    @GetMapping(value = "/userLogin")
+    @ResponseBody
+    public boolean userLogin(@RequestParam("email_address") String email_address, @RequestParam("password") String password) {
 
+        try {
+            User user = userRepository.findByEmailAddress(email_address);
+            return user.getPasswordHash().equals(hashString(password));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private @NotNull String hashString(final @NotNull String toHash) throws NoSuchAlgorithmException {
@@ -85,7 +97,5 @@ public class UserController {
         }
 
         return sb.toString();
-
     }
-
 }

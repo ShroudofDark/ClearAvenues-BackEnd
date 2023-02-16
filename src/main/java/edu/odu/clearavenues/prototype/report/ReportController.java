@@ -1,8 +1,6 @@
 package edu.odu.clearavenues.prototype.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +27,39 @@ public class ReportController {
         Report report = new Report(type, latitude, longitude, submittedBy, comment, locationId);
         reportRepository.save(report);
     }
+
+    @GetMapping("/editComment")
+    @ResponseBody
+    public void editComment(@RequestParam("reportId") int reportId, @RequestParam("comment") String comment) {
+
+        Report report = reportRepository.findByReportId(reportId);
+        report.setReportComment(comment);
+        reportRepository.save(report);
+    }
+
+    @GetMapping("/resolveReport")
+    @ResponseBody
+    public void resolveReport(@RequestParam("reportId") int reportId, @RequestParam("resolvedBy") String email) {
+
+        Report report = reportRepository.findByReportId(reportId);
+        report.setResolvedBy(email);
+        LocalDateTime date = LocalDateTime.now();
+        report.setResolutionDate(date);
+        report.setReportStatus(Report.Status.CLOSED);
+
+        reportRepository.save(report);
+    }
+
+    @GetMapping("/reportVote")
+    @ResponseBody
+    public void reportVote(@RequestParam("reportId") int reportId, @RequestParam("vote") boolean vote) {
+
+        Report report = reportRepository.findByReportId(reportId);
+        report.voteOnReport(vote);
+        reportRepository.save(report);
+    }
+
+
 
     /* Ignore this for now
     @PostMapping("/reports")

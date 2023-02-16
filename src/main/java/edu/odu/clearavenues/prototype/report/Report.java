@@ -88,4 +88,15 @@ public class Report {
     public void setResolvedBy(String email) {this.resolvedBy = email;}
 
     public void setReportStatus(Status status) {this.reportStatus = status;}
+
+    public void voteOnReport(boolean vote) {
+
+        if (vote) {
+            reportScore++;
+        }
+
+        else {
+            reportScore--;
+        }
+    }
 }
