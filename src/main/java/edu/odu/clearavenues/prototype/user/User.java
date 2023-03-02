@@ -49,6 +49,8 @@ public class User {
         return passwordHash;
     }
 
+    public String getAccountType() { return String.valueOf(accountType);}
+
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
@@ -60,4 +62,6 @@ public class User {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
+
+    public void setAccountType(String accountType) { this.accountType = TYPE.valueOf(accountType);}
 }

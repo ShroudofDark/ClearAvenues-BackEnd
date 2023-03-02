@@ -12,7 +12,7 @@ public class ReportController {
     @Autowired
     private ReportRepository reportRepository;
 
-    @GetMapping("/reports")
+    @GetMapping("/getReport")
     @ResponseBody
     public Optional<Report> getReportById(@RequestParam int id){
         return reportRepository.findById(id);
@@ -45,7 +45,7 @@ public class ReportController {
         report.setResolvedBy(email);
         LocalDateTime date = LocalDateTime.now();
         report.setResolutionDate(date);
-        report.setReportStatus(Report.Status.CLOSED);
+        report.setReportStatus(Report.Status.closed);
 
         reportRepository.save(report);
     }

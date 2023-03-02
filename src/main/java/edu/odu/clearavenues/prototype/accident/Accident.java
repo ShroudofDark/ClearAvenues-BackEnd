@@ -45,7 +45,19 @@ public class Accident {
         this.fatal = fatal;
     }
 
-    // Insert getters and setters as needed
+    public String getAccidentType() { return String.valueOf(accidentType); }
+
+    public int getAccidentLocationLat() { return accidentLocationLat; }
+
+    public int getAccidentLocationLong() { return accidentLocationLong; }
+
+    public LocalDateTime getAccidentTime() { return accidentTime;}
+
+    public int getNumInjuries() { return numInjuries; }
+
+    public int getLocationId() { return locationId; }
+
+    public int getAccidentId() { return accidentId; }
 }
 
 

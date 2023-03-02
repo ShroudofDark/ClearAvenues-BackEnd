@@ -9,18 +9,18 @@ import java.time.LocalDateTime;
 @Table(name = "reports")
 public class Report {
     public enum Type {
-        DEBRIS,
-        VEHICLE_ACCIDENT,
-        VANDALISM,
-        MISSING_SIGNAGE,
-        POTHOLE,
-        OTHER
+        debris,
+        vehicle_accident,
+        vandalism,
+        missing_signage,
+        pothole,
+        other
     }
 
     public enum Status {
-        SUBMITTED,
-        IN_PROGRESS,
-        CLOSED
+        submitted,
+        in_progress,
+        closed
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +51,9 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private Status reportStatus;
 
+    // Default constructor required. Was receiving error about it missing when using one of the functions.
+    public Report() {}
+
     public Report(Type reportType, int latitude, int longitude, String email, String comment, int locationId){
         this.reportType = reportType;
         this.reportLocationLat = latitude;
@@ -58,7 +61,7 @@ public class Report {
         this.submittedBy = email;
         this.reportComment = comment;
         this.locationId = locationId;
-        this.reportStatus = Status.SUBMITTED;
+        this.reportStatus = Status.submitted;
     }
 
     public int getReportId() {return reportId;}
