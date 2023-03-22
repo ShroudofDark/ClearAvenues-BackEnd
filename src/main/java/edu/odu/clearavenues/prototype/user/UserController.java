@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 // A "Controller" is the layer where HTTP requests are handled
 @Controller
+@RequestMapping("/users")
 public class UserController {
     @Autowired
 
@@ -18,10 +20,20 @@ public class UserController {
 
 
     // Go to http://127.0.0.1:8080/allUsers in your browser. It will return JSON data with a list of all Users
-    @GetMapping(path="/allUsers")
+    @GetMapping
     @ResponseBody
-    public Iterable<User> getAllUsers(){
-        return userRepository.findAll();
+    public Iterable<User> getAllUsers(@RequestParam Optional<String> account_type){
+        if (account_type.isPresent()){
+            return userRepository.findByAccountType("admin");
+        }
+        else {
+            return userRepository.findAll();
+        }
+    }
+    @GetMapping("{email}")
+    @ResponseBody
+    public User getUser(@PathVariable("email") String email){
+        return userRepository.findByEmailAddress(email);
     }
 
 
@@ -39,7 +51,7 @@ public class UserController {
        username and password to do
      */
 
-    @GetMapping(value = "/newUser")
+    @PostMapping(path = "new")
     @ResponseBody
     public void createUser(@RequestParam("email_address") String email_address,@RequestParam("display_name") String display_name,
                            @RequestParam("password") String password, @RequestParam("account_type") String account_type){
@@ -54,7 +66,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/resetPassword")
+    @PostMapping(path = "/resetPassword")
     @ResponseBody
     public void resetPassword(@RequestParam("email_address") String email_address, @RequestParam("oldPassword") String oldPassword,
                               @RequestParam("newPassword") String newPassword) {

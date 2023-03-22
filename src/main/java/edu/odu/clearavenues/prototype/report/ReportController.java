@@ -8,17 +8,18 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/reports")
 public class ReportController {
     @Autowired
     private ReportRepository reportRepository;
 
-    @GetMapping("/getReport")
+    @GetMapping("{id}")
     @ResponseBody
-    public Optional<Report> getReportById(@RequestParam int id){
+    public Optional<Report> getReportById(@PathVariable("id") int id){
         return reportRepository.findById(id);
     }
 
-    @GetMapping("/createReport")
+    @PostMapping()
     @ResponseBody
     public void createReport(@RequestParam("reportType") String reportType, @RequestParam("latitude") int latitude, @RequestParam("longitude") int longitude,
                              @RequestParam("submittedBy") String submittedBy, @RequestParam("comment") String comment, @RequestParam("locationId") int locationId) {
