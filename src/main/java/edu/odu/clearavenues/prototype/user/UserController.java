@@ -1,5 +1,6 @@
 package edu.odu.clearavenues.prototype.user;
 
+import edu.odu.clearavenues.prototype.accident.Accident;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,8 @@ public class UserController {
     @ResponseBody
     public Iterable<User> getAllUsers(@RequestParam Optional<String> account_type){
         if (account_type.isPresent()){
-            return userRepository.findByAccountType("admin");
+            User.TYPE accountType = User.TYPE.valueOf(account_type.get());
+            return userRepository.findByAccountType(accountType);
         }
         else {
             return userRepository.findAll();
@@ -39,7 +41,7 @@ public class UserController {
 
     // Go to http://127.0.0.1:8080/nativeSQLAllUsers?type=standard in your browser. It will return all users with a
     // Standard account type
-    @GetMapping(path="/nativeSQLAllUsers")
+    @GetMapping("/nativeSQLAllUsers")
     @ResponseBody
     public  Iterable<User> nativeSQLAllUsers(@RequestParam String type){
         // You can also use userRepository.findByAccountType(type) which is the auto implemented one
@@ -51,7 +53,7 @@ public class UserController {
        username and password to do
      */
 
-    @PostMapping(path = "new")
+    @PostMapping("new")
     @ResponseBody
     public void createUser(@RequestParam("email_address") String email_address,@RequestParam("display_name") String display_name,
                            @RequestParam("password") String password, @RequestParam("account_type") String account_type){
@@ -66,7 +68,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/resetPassword")
+    @PostMapping("resetPassword")
     @ResponseBody
     public void resetPassword(@RequestParam("email_address") String email_address, @RequestParam("oldPassword") String oldPassword,
                               @RequestParam("newPassword") String newPassword) {
@@ -83,7 +85,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/userLogin")
+    @GetMapping("login")
     @ResponseBody
     public boolean userLogin(@RequestParam("email_address") String email_address, @RequestParam("password") String password) {
 

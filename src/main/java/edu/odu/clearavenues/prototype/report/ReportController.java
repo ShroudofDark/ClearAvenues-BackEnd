@@ -19,7 +19,7 @@ public class ReportController {
         return reportRepository.findById(id);
     }
 
-    @PostMapping()
+    @PostMapping("new")
     @ResponseBody
     public void createReport(@RequestParam("reportType") String reportType, @RequestParam("latitude") int latitude, @RequestParam("longitude") int longitude,
                              @RequestParam("submittedBy") String submittedBy, @RequestParam("comment") String comment, @RequestParam("locationId") int locationId) {
@@ -29,7 +29,7 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @GetMapping("/editComment")
+    @GetMapping("editComment")
     @ResponseBody
     public void editComment(@RequestParam("reportId") int reportId, @RequestParam("comment") String comment) {
 
@@ -38,7 +38,7 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @GetMapping("/resolveReport")
+    @GetMapping("resolve")
     @ResponseBody
     public void resolveReport(@RequestParam("reportId") int reportId, @RequestParam("resolvedBy") String email) {
 
@@ -51,7 +51,7 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @GetMapping("/reportVote")
+    @GetMapping("vote")
     @ResponseBody
     public void reportVote(@RequestParam("reportId") int reportId, @RequestParam("vote") boolean vote) {
 

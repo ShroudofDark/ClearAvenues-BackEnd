@@ -14,10 +14,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     // For example, I don't have to implement the SQL query for this method myself. Spring Boot implements it
     // automatically during runtime.
     // This method will return all users of a specific account Type
-    Iterable<User> findByAccountType(String type);
+    Iterable<User> findByAccountType(User.TYPE type);
 
     User findByEmailAddress(String email_address);
-
 
     // However, you can still write a query yourself if you'd like
     @Query(value = "SELECT * FROM users WHERE account_type = :type", nativeQuery = true)
