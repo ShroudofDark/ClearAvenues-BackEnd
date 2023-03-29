@@ -1,7 +1,11 @@
 package edu.odu.clearavenues.prototype.report;
 
+import edu.odu.clearavenues.prototype.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
 
 
@@ -13,7 +17,9 @@ public class Report {
         vehicle_accident,
         vandalism,
         missing_signage,
+        obstructed_sign,
         pothole,
+        flooding,
         other
     }
 
@@ -29,11 +35,14 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private Type reportType;
 
-    private int reportLocationLat;
+    private double reportLocationLat;
 
-    private int reportLocationLong;
+    private double reportLocationLong;
 
-    private String submittedBy;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "submitted_by")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User submittedBy;
 
     private String reportComment;
 
@@ -54,7 +63,7 @@ public class Report {
     // Default constructor required. Was receiving error about it missing when using one of the functions.
     public Report() {}
 
-    public Report(Type reportType, int latitude, int longitude, String email, String comment, int locationId){
+    public Report(Type reportType, double latitude, double longitude, User email, String comment, int locationId){
         this.reportType = reportType;
         this.reportLocationLat = latitude;
         this.reportLocationLong = longitude;
@@ -66,11 +75,12 @@ public class Report {
 
     public int getReportId() {return reportId;}
 
-    public int getReportLocationLatitude() {return reportLocationLat;}
+    public double getReportLocationLatitude() {return reportLocationLat;}
 
-    public int getReportLocationLongitude() {return reportLocationLong;}
+    public double getReportLocationLongitude() {return reportLocationLong;}
 
-    public String getSubmittedBy() {return submittedBy;}
+
+    public User getSubmittedBy() {return submittedBy;}
 
     public String getReportComment() {return reportComment;}
 
@@ -91,6 +101,18 @@ public class Report {
     public void setResolvedBy(String email) {this.resolvedBy = email;}
 
     public void setReportStatus(Status status) {this.reportStatus = status;}
+
+    public void setReportLocationLat(double reportLocationLat) {
+        this.reportLocationLat = reportLocationLat;
+    }
+
+    public void setReportLocationLong(double reportLocationLong) {
+        this.reportLocationLong = reportLocationLong;
+    }
+
+    public void setReportType(Type reportType) {
+        this.reportType = reportType;
+    }
 
     public void voteOnReport(boolean vote) {
 
