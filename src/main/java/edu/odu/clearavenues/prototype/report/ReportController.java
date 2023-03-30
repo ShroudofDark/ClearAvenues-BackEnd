@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/reports")
+@RequestMapping
 public class ReportController {
     @Autowired
     private ReportRepository reportRepository;
@@ -30,20 +30,26 @@ public class ReportController {
         return reportRepository.findAll();
     }
 
-    @GetMapping("{id}")
+
+    // Return a report given its id
+    @GetMapping("/reports/{id}")
     @ResponseBody
     public Optional<Report> getReportById(@PathVariable("id") int id){
         return reportRepository.findById(id);
     }
 
+    // Return all reports made by a specific user
     @GetMapping(path = "/users/{email}/reports")
     @ResponseBody
     public List<Report> getReportsByUser(@PathVariable("email") String email){
         List<Report> reports;
-        reports = reportRepository.findBySubmittedBy(email);
+        reports = reportRepository.findBySubmitter(email);
         return reports;
     }
 
+
+
+    // Allows a user to create a new report
     @PostMapping("/users/{email}/reports")
     @ResponseBody
     public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
@@ -55,7 +61,10 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @PostMapping("/users/{email}/reports/{id}")
+
+    // Allows a user to edit an existing report (incomplete, haven't tested yet)
+    // Probably don't need all these fields to be editable though
+    @PutMapping("/users/{email}/reports/{id}")
     public ResponseEntity<String> editReport(@PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
                            @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @PathVariable("id") int reportId) {
         Report report;
@@ -71,7 +80,7 @@ public class ReportController {
         }
         return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
     }
-    @GetMapping("editComment")
+    @GetMapping("/reports/editComment")
     @ResponseBody
     public void editComment(@RequestParam("reportId") int reportId, @RequestParam("comment") String comment) {
 
@@ -80,7 +89,7 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @GetMapping("resolve")
+    @GetMapping("/reports/resolve")
     @ResponseBody
     public void resolveReport(@RequestParam("reportId") int reportId, @RequestParam("resolvedBy") String email) {
 
@@ -93,7 +102,7 @@ public class ReportController {
         reportRepository.save(report);
     }
 
-    @GetMapping("vote")
+    @GetMapping("/reports/vote")
     @ResponseBody
     public void reportVote(@RequestParam("reportId") int reportId, @RequestParam("vote") boolean vote) {
 

@@ -1,5 +1,6 @@
 package edu.odu.clearavenues.prototype.report;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.odu.clearavenues.prototype.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,10 +40,15 @@ public class Report {
 
     private double reportLocationLong;
 
+
+    // Many to One relationship. Many reports can belong to one user (no need to add this to User file)
+    // LAZY fetchtype for improved performance.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "submitted_by")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User submittedBy;
+
+    // Name of the foreign key column
+    @JoinColumn(name = "submitter")
+    @JsonIgnore
+    private User submitter;
 
     private String reportComment;
 
@@ -67,7 +73,7 @@ public class Report {
         this.reportType = reportType;
         this.reportLocationLat = latitude;
         this.reportLocationLong = longitude;
-        this.submittedBy = email;
+        this.submitter = email;
         this.reportComment = comment;
         this.locationId = locationId;
         this.reportStatus = Status.submitted;
@@ -80,7 +86,7 @@ public class Report {
     public double getReportLocationLongitude() {return reportLocationLong;}
 
 
-    public User getSubmittedBy() {return submittedBy;}
+    public User getSubmitter() {return submitter;}
 
     public String getReportComment() {return reportComment;}
 
