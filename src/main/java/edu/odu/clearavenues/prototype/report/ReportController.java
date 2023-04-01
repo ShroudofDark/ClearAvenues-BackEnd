@@ -1,5 +1,7 @@
 package edu.odu.clearavenues.prototype.report;
 
+import edu.odu.clearavenues.prototype.locations.Location;
+import edu.odu.clearavenues.prototype.locations.LocationRepository;
 import edu.odu.clearavenues.prototype.user.User;
 import edu.odu.clearavenues.prototype.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +23,9 @@ public class ReportController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
 
 
@@ -57,7 +62,8 @@ public class ReportController {
         Report report;
         Report.Type type = Report.Type.valueOf(reportType);
         User user =  userRepository.findByEmailAddress(email);
-        report = new Report(type, latitude, longitude, user, comment, locationId);
+        Location location = locationRepository.findByLocationId(locationId);
+        report = new Report(type, latitude, longitude, user, comment, location);
         reportRepository.save(report);
     }
 

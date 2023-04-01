@@ -1,6 +1,7 @@
 package edu.odu.clearavenues.prototype.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.odu.clearavenues.prototype.locations.Location;
 import edu.odu.clearavenues.prototype.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -66,9 +67,10 @@ public class Report {
     @JsonIgnore
     private User resolvedBy;
 
-    /* locationId has many-to-one relationship with the id column in locations table, since there can be many reports in
-       a single location/zipcode. However, I think adding that here will need to wait until we implement the Location class */
-    private int locationId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "location_id")
+    @JsonIgnore
+    private Location locationId;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -78,7 +80,7 @@ public class Report {
     // Default constructor required. Was receiving error about it missing when using one of the functions.
     public Report() {}
 
-    public Report(Type reportType, double latitude, double longitude, User email, String comment, int locationId){
+    public Report(Type reportType, double latitude, double longitude, User email, String comment, Location locationId){
         this.reportType = reportType;
         this.reportLocationLat = latitude;
         this.reportLocationLong = longitude;
@@ -107,7 +109,7 @@ public class Report {
 
     public User getResolvedBy() {return resolvedBy;}
 
-    public int getLocationId() {return locationId;}
+    public Location getLocationId() {return locationId;}
 
     public void setReportComment(String comment) {this.reportComment = comment;}
 
