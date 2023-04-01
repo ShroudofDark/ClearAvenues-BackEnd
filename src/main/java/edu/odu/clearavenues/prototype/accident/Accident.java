@@ -30,6 +30,11 @@ public class Accident {
 
     private int numInjuries;
 
+    /* Commented out for same reason as what is detailed in the comment for locationId in reports class */
+    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // Name of the foreign key column
+    @JoinColumn(name = "location_id")
+    @JsonIgnore */
     private int locationId;
 
     private boolean fatal;
@@ -59,5 +64,3 @@ public class Accident {
 
     public int getAccidentId() { return accidentId; }
 }
-
-

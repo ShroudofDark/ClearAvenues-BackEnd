@@ -80,31 +80,33 @@ public class ReportController {
         }
         return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
     }
-    @GetMapping("/reports/editComment")
+    @GetMapping("/reports/{id}/editComment")
     @ResponseBody
-    public void editComment(@RequestParam("reportId") int reportId, @RequestParam("comment") String comment) {
+    public void editComment(@PathVariable("id") int reportId, @RequestParam("comment") String comment) {
 
         Report report = reportRepository.findByReportId(reportId);
         report.setReportComment(comment);
         reportRepository.save(report);
     }
 
-    @GetMapping("/reports/resolve")
+    @GetMapping("/reports/{id}/resolve")
     @ResponseBody
-    public void resolveReport(@RequestParam("reportId") int reportId, @RequestParam("resolvedBy") String email) {
+    public void resolveReport(@PathVariable("id") int reportId, @RequestParam("resolvedBy") String email) {
 
         Report report = reportRepository.findByReportId(reportId);
-        report.setResolvedBy(email);
+        //report.setResolvedBy(email);
+        User user =  userRepository.findByEmailAddress(email);
+        report.setResolvedBy(user);
         LocalDateTime date = LocalDateTime.now();
         report.setResolutionDate(date);
-        report.setReportStatus(Report.Status.closed);
+        report.setStatus(Report.Status.closed);
 
         reportRepository.save(report);
     }
 
-    @GetMapping("/reports/vote")
+    @GetMapping("/reports/{id}/vote")
     @ResponseBody
-    public void reportVote(@RequestParam("reportId") int reportId, @RequestParam("vote") boolean vote) {
+    public void reportVote(@PathVariable("id") int reportId, @RequestParam("vote") boolean vote) {
 
         Report report = reportRepository.findByReportId(reportId);
         report.voteOnReport(vote);

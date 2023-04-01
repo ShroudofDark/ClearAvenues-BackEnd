@@ -59,12 +59,21 @@ public class Report {
 
     private LocalDateTime resolutionDate;
 
-    private String resolvedBy;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 
+    // Name of the foreign key column
+    @JoinColumn(name = "resolved_by")
+    @JsonIgnore
+    private User resolvedBy;
+
+    /* locationId has many-to-one relationship with the id column in locations table, since there can be many reports in
+       a single location/zipcode. However, I think adding that here will need to wait until we implement the Location class */
     private int locationId;
 
     @Enumerated(EnumType.STRING)
-    private Status reportStatus;
+    private Status status;
+
+    private String reportStatus;
 
     // Default constructor required. Was receiving error about it missing when using one of the functions.
     public Report() {}
@@ -76,7 +85,7 @@ public class Report {
         this.submitter = email;
         this.reportComment = comment;
         this.locationId = locationId;
-        this.reportStatus = Status.submitted;
+        this.status = Status.submitted;
     }
 
     public int getReportId() {return reportId;}
@@ -96,7 +105,7 @@ public class Report {
 
     public LocalDateTime getResolutionDate() {return resolutionDate;}
 
-    public String getResolvedBy() {return resolvedBy;}
+    public User getResolvedBy() {return resolvedBy;}
 
     public int getLocationId() {return locationId;}
 
@@ -104,9 +113,11 @@ public class Report {
 
     public void setResolutionDate(LocalDateTime date) {this.resolutionDate = date;}
 
-    public void setResolvedBy(String email) {this.resolvedBy = email;}
+    public void setResolvedBy(User email) {this.resolvedBy = email;}
 
-    public void setReportStatus(Status status) {this.reportStatus = status;}
+    public void setStatus(Status status) {this.status = status;}
+
+    public void setReportStatus(String reportStatus) {this.reportStatus = reportStatus;}
 
     public void setReportLocationLat(double reportLocationLat) {
         this.reportLocationLat = reportLocationLat;
