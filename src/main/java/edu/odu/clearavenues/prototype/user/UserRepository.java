@@ -1,5 +1,6 @@
 package edu.odu.clearavenues.prototype.user;
 
+import edu.odu.clearavenues.prototype.organization.Organization;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +16,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     // automatically during runtime.
     // This method will return all users of a specific account Type
     Iterable<User> findByAccountType(User.TYPE type);
+
+    Iterable<User> findByOrganization(Organization organization);
 
     User findByEmailAddress(String email_address);
 

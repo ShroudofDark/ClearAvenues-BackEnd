@@ -97,6 +97,9 @@ public class UserController {
         }
     }
 
+    // Need functions to add user to organization, remove user from organization, etc?
+
+
     private @NotNull String hashString(final @NotNull String toHash) throws NoSuchAlgorithmException {
 
         // Hash text string

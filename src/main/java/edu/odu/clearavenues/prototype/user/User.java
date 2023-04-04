@@ -1,5 +1,7 @@
 package edu.odu.clearavenues.prototype.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.odu.clearavenues.prototype.organization.Organization;
 import jakarta.persistence.*;
 
 
@@ -28,6 +30,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private TYPE accountType;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    // Name of the foreign key column
+    @JoinColumn(name = "organization")
+    @JsonIgnore
+    private Organization organization;
+
+    private boolean orgApproved;
+
+
     // This is the User constructor
     public User(String email, String name, String pwHash, User.TYPE accountType){
         this.emailAddress = email;
@@ -49,6 +61,10 @@ public class User {
         return passwordHash;
     }
 
+    public Organization getOrganization() { return organization; }
+
+    public boolean isOrgApproved() { return orgApproved; }
+
     public String getAccountType() { return String.valueOf(accountType);}
 
     public void setPasswordHash(String passwordHash) {
@@ -63,5 +79,9 @@ public class User {
         this.displayName = displayName;
     }
 
-    public void setAccountType(String accountType) { this.accountType = TYPE.valueOf(accountType);}
+    public void setAccountType(String accountType) { this.accountType = TYPE.valueOf(accountType); }
+
+    public void setOrganization(Organization orgName) { this.organization = orgName; }
+
+    public void setOrgApproved() { this.orgApproved = true; }
 }

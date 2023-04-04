@@ -1,7 +1,7 @@
 package edu.odu.clearavenues.prototype.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.odu.clearavenues.prototype.locations.Location;
+import edu.odu.clearavenues.prototype.location.Location;
 import edu.odu.clearavenues.prototype.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

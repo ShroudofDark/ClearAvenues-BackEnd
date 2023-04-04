@@ -1,7 +1,7 @@
 package edu.odu.clearavenues.prototype.report;
 
-import edu.odu.clearavenues.prototype.locations.Location;
-import edu.odu.clearavenues.prototype.locations.LocationRepository;
+import edu.odu.clearavenues.prototype.location.Location;
+import edu.odu.clearavenues.prototype.location.LocationRepository;
 import edu.odu.clearavenues.prototype.user.User;
 import edu.odu.clearavenues.prototype.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
