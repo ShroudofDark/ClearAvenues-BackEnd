@@ -1,6 +1,8 @@
 package edu.odu.clearavenues.prototype.user;
 
 import edu.odu.clearavenues.prototype.accident.Accident;
+import edu.odu.clearavenues.prototype.organization.Organization;
+import edu.odu.clearavenues.prototype.organization.OrganizationRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
+import static com.mysql.cj.MysqlType.NULL;
+
 // A "Controller" is the layer where HTTP requests are handled
 @Controller
 @RequestMapping("/users")
@@ -18,6 +22,8 @@ public class UserController {
 
     // Lets you access the user database. Read UserRepository.java for more info
     private UserRepository userRepository;
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
 
     // Go to http://127.0.0.1:8080/allUsers in your browser. It will return JSON data with a list of all Users
@@ -98,6 +104,36 @@ public class UserController {
     }
 
     // Need functions to add user to organization, remove user from organization, etc?
+
+    @PostMapping("{user}/addtoOrg/{organization}")
+    @ResponseBody
+    public boolean addUserToOrg(@PathVariable("organization") String orgName, @PathVariable("user") String email) {
+
+        User user = userRepository.findByEmailAddress(email);
+        if(user != null) {
+            Organization organization = organizationRepository.findByOrgName(orgName);
+            if(organization != null) {
+                user.setOrganization(organization);
+                userRepository.save(user);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @PostMapping("{user}/removeOrg")
+    @ResponseBody
+    public boolean removeUserFromOrg(@PathVariable("user") String email) {
+
+        User user = userRepository.findByEmailAddress(email);
+        if (user != null) {
+            User update = new User(user.getEmailAddress(), user.getDisplayName(), user.getPasswordHash(), User.TYPE.valueOf(user.getAccountType()));
+            userRepository.save(update);
+            return true;
+        }
+        return false;
+    }
 
 
     private @NotNull String hashString(final @NotNull String toHash) throws NoSuchAlgorithmException {

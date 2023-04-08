@@ -13,7 +13,12 @@ public class Organization {
     private String orgName;
 
     // Organization's state of jurisdiction. Limited to 2 character abbreviation; eg. VA, MD, DC, CA, etc.
+    // Should probably be an enum but for our prototype testing this is good enough
     private String state;
+
+    public Organization() {
+
+    }
 
     public Organization(String name, String location) {
 
