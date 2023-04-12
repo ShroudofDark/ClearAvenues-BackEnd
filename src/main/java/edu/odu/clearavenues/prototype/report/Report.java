@@ -101,6 +101,10 @@ public class Report {
 
     public String getReportComment() {return reportComment;}
 
+    public Type getReportType() {
+        return reportType;
+    }
+
     public LocalDateTime getReportDate() {return reportDate;}
 
     public int getReportScore() {return reportScore;}
