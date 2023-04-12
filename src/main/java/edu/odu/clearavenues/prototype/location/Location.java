@@ -15,6 +15,7 @@ public class Location {
     public Location(int id) {
 
         locationId = id;
+        intensityScore = 0;
         // Intensity score defaults to null in DB if nothing is specified
     }
 

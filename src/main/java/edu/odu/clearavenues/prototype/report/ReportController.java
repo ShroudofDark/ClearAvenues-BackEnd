@@ -29,7 +29,7 @@ public class ReportController {
 
 
 
-    @GetMapping()
+    @GetMapping("/reports")
     @ResponseBody
     public Iterable<Report> getAllReports(){
         return reportRepository.findAll();
@@ -41,6 +41,12 @@ public class ReportController {
     @ResponseBody
     public Optional<Report> getReportById(@PathVariable("id") int id){
         return reportRepository.findById(id);
+    }
+
+    @DeleteMapping("/reports/{id}")
+    @ResponseBody
+    public void deleteReportById(@PathVariable("id") int id){
+        reportRepository.deleteById(id);
     }
 
     // Return all reports made by a specific user
