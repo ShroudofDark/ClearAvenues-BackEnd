@@ -58,6 +58,9 @@ public class Report {
 
     private int reportScore;
 
+    @Lob
+    private String image;
+
     private LocalDateTime resolutionDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -88,6 +91,17 @@ public class Report {
         this.reportComment = comment;
         this.locationId = locationId;
         this.status = Status.submitted;
+    }
+
+    public Report(Type reportType, double latitude, double longitude, User email, String comment, Location locationId, String image){
+        this.reportType = reportType;
+        this.reportLocationLat = latitude;
+        this.reportLocationLong = longitude;
+        this.submitter = email;
+        this.reportComment = comment;
+        this.locationId = locationId;
+        this.status = Status.submitted;
+        this.image = image;
     }
 
     public int getReportId() {return reportId;}

@@ -5,6 +5,7 @@ import edu.odu.clearavenues.prototype.location.LocationRepository;
 import edu.odu.clearavenues.prototype.user.User;
 import edu.odu.clearavenues.prototype.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,20 +59,34 @@ public class ReportController {
         return reports;
     }
 
-
-
     // Allows a user to create a new report
     @PostMapping("/users/{email}/reports")
     @ResponseBody
     public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
                              @RequestParam("comment") String comment, @RequestParam("locationId") int locationId) {
+
+        createReport(request, email, reportType, latitude, longitude, comment, locationId, "");
+    }
+
+    @PostMapping("/users/{email}/imageReport")
+    @ResponseBody
+    public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
+                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @RequestParam("imageString") String image) {
         Report report;
         Report.Type type = Report.Type.valueOf(reportType);
         User user =  userRepository.findByEmailAddress(email);
         Location location = locationRepository.findByLocationId(locationId);
-        report = new Report(type, latitude, longitude, user, comment, location);
+
+        if (image.isBlank())
+            report = new Report(type, latitude, longitude, user, comment, location);
+
+        else {
+            report = new Report(type, latitude, longitude, user, comment, location, image);
+        }
         reportRepository.save(report);
     }
+
+
 
 
     // Allows a user to edit an existing report (incomplete, haven't tested yet)
@@ -92,6 +107,8 @@ public class ReportController {
         }
         return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
     }
+
+
     @GetMapping("/reports/{id}/editComment")
     @ResponseBody
     public void editComment(@PathVariable("id") int reportId, @RequestParam("comment") String comment) {

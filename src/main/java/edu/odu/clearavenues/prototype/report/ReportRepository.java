@@ -13,4 +13,7 @@ public interface ReportRepository extends CrudRepository<Report, Integer> {
 
     @Query(value = "SELECT * FROM reports WHERE submitter = :email", nativeQuery = true)
     List<Report> findBySubmitter(@Param("email") String email);
+
+    @Query(value = "SELECT count(*) FROM reports WHERE report_date >= date_sub(curdate(), interval 6 day) AND location_id = :locationId", nativeQuery = true)
+    int getLast7DayReportCount(@Param("locationId") int locationId);
 }
