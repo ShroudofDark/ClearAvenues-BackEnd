@@ -129,6 +129,7 @@ public class Report {
 
     public Location getLocationId() {return locationId;}
 
+    public Status getStatus(){return status;}
     public void setReportComment(String comment) {this.reportComment = comment;}
 
     public void setResolutionDate(LocalDateTime date) {this.resolutionDate = date;}
