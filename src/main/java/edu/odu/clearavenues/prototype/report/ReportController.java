@@ -59,13 +59,14 @@ public class ReportController {
         return reports;
     }
 
-    // Allows a user to create a new report
-    @PostMapping("/users/{email}/reports")
+    @GetMapping(path = "/users/{email}/reports/{status}")
     @ResponseBody
-    public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
-                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId) {
+    public List<Report> getReportsByUserAndStatus(@PathVariable("email") String email, @PathVariable String status){
 
-        createReport(request, email, reportType, latitude, longitude, comment, locationId, "");
+        List<Report> reports;
+
+        reports = reportRepository.getReportsBySubmitterAndStatus(email, status);
+        return reports;
     }
 
     @PostMapping("/users/{email}/imageReport")
