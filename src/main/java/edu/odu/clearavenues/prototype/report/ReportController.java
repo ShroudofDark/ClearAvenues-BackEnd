@@ -69,20 +69,20 @@ public class ReportController {
         return reports;
     }
 
-    @PostMapping("/users/{email}/imageReport")
+    @PostMapping("/users/{email}/reports")
     @ResponseBody
     public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
-                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @RequestParam("imageString") String image) {
+                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @RequestParam("imageString") Optional<String> image) {
         Report report;
         Report.Type type = Report.Type.valueOf(reportType);
         User user =  userRepository.findByEmailAddress(email);
         Location location = locationRepository.findByLocationId(locationId);
 
-        if (image.isBlank())
+        if (image.isEmpty())
             report = new Report(type, latitude, longitude, user, comment, location);
 
         else {
-            report = new Report(type, latitude, longitude, user, comment, location, image);
+            report = new Report(type, latitude, longitude, user, comment, location, image.get());
         }
         reportRepository.save(report);
     }
