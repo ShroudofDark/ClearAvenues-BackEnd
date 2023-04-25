@@ -69,6 +69,14 @@ public class ReportController {
         return reports;
     }
 
+    @GetMapping("/reports/bylocation/{locationId}")
+    @ResponseBody
+    public List<Report> getReportsByLocationId(@PathVariable("locationId") int locationId) {
+        List<Report> reports;
+        reports = reportRepository.findByLocationId(locationId);
+        return reports;
+    }
+
     @PostMapping("/users/{email}/reports")
     @ResponseBody
     public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
