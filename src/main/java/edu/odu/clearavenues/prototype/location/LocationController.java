@@ -2,6 +2,7 @@
 package edu.odu.clearavenues.prototype.location;
 
 import edu.odu.clearavenues.prototype.accident.AccidentRepository;
+import edu.odu.clearavenues.prototype.report.Report;
 import edu.odu.clearavenues.prototype.report.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class LocationController {
     @Autowired
     private AccidentRepository accidentRepository;
 
+    @GetMapping("")
+    @ResponseBody
+    public Iterable<Location> getAllLocations() {return locationRepository.findAll();}
     @PostMapping("{locationId}")
     @ResponseBody
     public void updateIntensityScore(@PathVariable("locationId") int locationId) {
