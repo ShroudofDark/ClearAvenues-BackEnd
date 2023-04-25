@@ -93,6 +93,7 @@ public class ReportController {
     // Allows a user to edit an existing report (incomplete, haven't tested yet)
     // Probably don't need all these fields to be editable though
     @PutMapping("/users/{email}/reports/{id}")
+    @ResponseBody
     public ResponseEntity<String> editReport(@PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
                            @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @PathVariable("id") int reportId) {
         Report report;
