@@ -21,9 +21,9 @@ public class Accident {
     @Enumerated(EnumType.STRING)
     private Type accidentType;
 
-    private int accidentLocationLat;
+    private double accidentLocationLat;
 
-    private int accidentLocationLong;
+    private double accidentLocationLong;
 
     @CreationTimestamp
     private LocalDateTime accidentTime;
@@ -40,7 +40,7 @@ public class Accident {
     private boolean fatal;
 
     // format for LocalDateTime is YYYY-MM-DDTHH:MM:SS with the time being 24-hour format
-    public Accident(Type type, int latitude, int longitude, LocalDateTime datetime, int numInjuries, int locationId, boolean fatal) {
+    public Accident(Type type, double latitude, double longitude, LocalDateTime datetime, int numInjuries, int locationId, boolean fatal) {
         this.accidentType = type;
         this.accidentLocationLat = latitude;
         this.accidentLocationLong = longitude;
@@ -52,9 +52,9 @@ public class Accident {
 
     public String getAccidentType() { return String.valueOf(accidentType); }
 
-    public int getAccidentLocationLat() { return accidentLocationLat; }
+    public double getAccidentLocationLat() { return accidentLocationLat; }
 
-    public int getAccidentLocationLong() { return accidentLocationLong; }
+    public double getAccidentLocationLong() { return accidentLocationLong; }
 
     public LocalDateTime getAccidentTime() { return accidentTime;}
 
