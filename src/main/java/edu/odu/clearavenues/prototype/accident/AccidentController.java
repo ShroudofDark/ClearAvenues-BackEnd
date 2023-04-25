@@ -15,7 +15,7 @@ public class AccidentController {
 
     @PostMapping("new")
     @ResponseBody
-    public void importAccident(@RequestParam("accidentType") String accidentType, @RequestParam("latitude") int latitude, @RequestParam("longitude") int longitude,
+    public void importAccident(@RequestParam("accidentType") String accidentType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
                                @RequestParam("datetime") LocalDateTime datetime, @RequestParam("numInjuries") int numInjuries, @RequestParam("locationId") int locationId,
                                @RequestParam("fatal") boolean fatal) {
 
