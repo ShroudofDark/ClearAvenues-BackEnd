@@ -46,5 +46,5 @@ public class LocationController {
             location.setIntensityScore(3);
 
         locationRepository.save(location);
-        }
+    }
 }
