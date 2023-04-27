@@ -7,12 +7,15 @@ import edu.odu.clearavenues.prototype.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,15 +83,21 @@ public class ReportController {
     @PostMapping("/users/{email}/reports")
     @ResponseBody
     public void createReport(HttpServletRequest request, @PathVariable("email") String email, @RequestParam("reportType") String reportType, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude,
-                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @RequestParam("imageString") Optional<String> image) {
+                             @RequestParam("comment") String comment, @RequestParam("locationId") int locationId, @RequestParam("imageString") Optional<String> image, @RequestParam("date")Optional<String> date) {
         Report report;
         Report.Type type = Report.Type.valueOf(reportType);
         User user =  userRepository.findByEmailAddress(email);
         Location location = locationRepository.findByLocationId(locationId);
 
-        if (image.isEmpty())
-            report = new Report(type, latitude, longitude, user, comment, location);
-
+        // The report generator on frontend doesn't submit with images so we can include it in this check
+        if (image.isEmpty()) {
+            if (date.isEmpty()) {
+                report = new Report(type, latitude, longitude, user, comment, location);
+            } else {
+                LocalDateTime parsedDate = LocalDateTime.parse(date.get().replaceAll("Z", ""));
+                report = new Report(type, latitude, longitude, user, comment, location, parsedDate);
+            }
+        }
         else {
             report = new Report(type, latitude, longitude, user, comment, location, image.get());
         }

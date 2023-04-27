@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
@@ -72,7 +73,6 @@ public class Report {
 
     private String reportComment;
 
-    @CreationTimestamp
     private LocalDateTime reportDate;
 
     private int reportScore;
@@ -112,6 +112,17 @@ public class Report {
         this.status = Status.submitted;
     }
 
+    public Report(Type reportType, double latitude, double longitude, User email, String comment, Location locationId, LocalDateTime date){
+        this.reportType = reportType;
+        this.reportLocationLat = latitude;
+        this.reportLocationLong = longitude;
+        this.submitter = email;
+        this.reportComment = comment;
+        this.locationId = locationId;
+        this.status = Status.submitted;
+        this.reportDate = date;
+    }
+
     public Report(Type reportType, double latitude, double longitude, User email, String comment, Location locationId, String image){
         this.reportType = reportType;
         this.reportLocationLat = latitude;
@@ -123,12 +134,17 @@ public class Report {
         this.image = image;
     }
 
+
+    // Allows us to submit reports with our own timestamps (for use with generating reports)
+    @PrePersist
+    void onCreate(){
+        setReportDate(Objects.requireNonNullElseGet(this.reportDate, LocalDateTime::now));
+    }
     public int getReportId() {return reportId;}
 
     public double getReportLocationLatitude() {return reportLocationLat;}
 
     public double getReportLocationLongitude() {return reportLocationLong;}
-
 
     public User getSubmitter() {return submitter;}
 
@@ -151,6 +167,7 @@ public class Report {
     public Status getStatus(){return status;}
     public void setReportComment(String comment) {this.reportComment = comment;}
 
+    public void setReportDate(LocalDateTime date){this.reportDate = date;}
     public void setResolutionDate(LocalDateTime date) {this.resolutionDate = date;}
 
     public void setResolvedBy(User email) {this.resolvedBy = email;}
