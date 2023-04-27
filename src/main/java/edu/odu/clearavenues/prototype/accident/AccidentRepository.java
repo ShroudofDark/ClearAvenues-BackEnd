@@ -8,7 +8,7 @@ public interface AccidentRepository extends CrudRepository<Accident, Integer> {
 
     Accident findByAccidentId(int accidentId);
 
-    Accident findByLocationId(int locationId);
+    Iterable<Accident> findByLocationId(int locationId);
 
 
     @Query(value = "SELECT count(*) FROM accidents WHERE accident_time >= date_sub(curdate(), interval 6 day) AND location_id = :locationId", nativeQuery = true)
