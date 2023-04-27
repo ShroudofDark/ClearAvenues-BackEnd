@@ -21,6 +21,22 @@ public class LocationController {
     @Autowired
     private AccidentRepository accidentRepository;
 
+    @GetMapping("{id}/latitude")
+    @ResponseBody
+    public double getHotspotLatitude(@PathVariable("id") int locationId) {
+
+        Location location = locationRepository.findByLocationId(locationId);
+        return location.getHotspotLat();
+    }
+
+    @GetMapping("{id}/longitude")
+    @ResponseBody
+    public double getHotspotLongitude(@PathVariable("id") int locationId) {
+
+        Location location = locationRepository.findByLocationId(locationId);
+        return location.getHotspotLong();
+    }
+
     @GetMapping("")
     @ResponseBody
     public Iterable<Location> getAllLocations() {return locationRepository.findAll();}
