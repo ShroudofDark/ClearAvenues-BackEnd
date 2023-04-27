@@ -9,10 +9,12 @@ import java.time.LocalDateTime;
 public class Accident {
 
     public enum Type {
-        SINGLE_VEHICLE,
-        MULTI_VEHICLE,
-        VEHICLE_PEDESTRIAN
+        single_vehicle,
+        multi_vehicle,
+        vehicle_pedestrian
     }
+
+    public Accident() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
