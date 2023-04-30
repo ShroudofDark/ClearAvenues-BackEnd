@@ -22,7 +22,7 @@ public class AccidentController {
                                @RequestParam("datetime") LocalDateTime datetime, @RequestParam("numInjuries") int numInjuries, @RequestParam("locationId") int locationId,
                                @RequestParam("fatal") boolean fatal) {
 
-        Accident.Type type = Accident.Type.valueOf(accidentType.toUpperCase());
+        Accident.Type type = Accident.Type.valueOf(accidentType);
         Accident accident = new Accident(type, latitude, longitude, datetime, numInjuries, locationId, fatal);
         accidentRepository.save(accident);
     }
