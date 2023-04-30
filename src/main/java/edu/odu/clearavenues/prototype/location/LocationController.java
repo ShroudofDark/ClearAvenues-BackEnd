@@ -40,22 +40,24 @@ public class LocationController {
     @GetMapping("")
     @ResponseBody
     public Iterable<Location> getAllLocations() {return locationRepository.findAll();}
-    @PostMapping("{locationId}")
+    @PostMapping("update/{locationId}")
     @ResponseBody
     public void updateIntensityScore(@PathVariable("locationId") int locationId) {
 
         Location location = locationRepository.findByLocationId(locationId);
 
-        final int combinedAccidentAndReportsLast7Days = reportRepository.getLast7DayReportCount(locationId)
-                + accidentRepository.getLast7DayAccidentCount(locationId);
+        //Changed to use the smallest value here to simulate "pairing" off an accident and report.
+        //Aka in order to increase this count by one there needs to be at least one report and at least one accident.
+        final int combinedAccidentAndReportsLast7Days = Math.min(reportRepository.getLast7DayReportCount(locationId),
+                accidentRepository.getLast7DayAccidentCount(locationId));
 
         if (combinedAccidentAndReportsLast7Days == 0)
             location.setIntensityScore(0);
 
-        else if(combinedAccidentAndReportsLast7Days > 0 && combinedAccidentAndReportsLast7Days < 11)
+        else if(combinedAccidentAndReportsLast7Days > 0 && combinedAccidentAndReportsLast7Days < 5)
             location.setIntensityScore(1);
 
-        else if(combinedAccidentAndReportsLast7Days > 10 && combinedAccidentAndReportsLast7Days < 25)
+        else if(combinedAccidentAndReportsLast7Days > 4 && combinedAccidentAndReportsLast7Days < 10)
             location.setIntensityScore(2);
 
         else
