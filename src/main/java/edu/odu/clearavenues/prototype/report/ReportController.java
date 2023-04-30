@@ -35,7 +35,11 @@ public class ReportController {
 
     @GetMapping("/reports")
     @ResponseBody
-    public Iterable<Report> getAllReports(){
+    public Iterable<Report> getAllReports(@RequestParam("status") Optional<String> status){
+        if (status.isPresent()){
+            Report.Status myStatus = Report.Status.valueOf(status.get());
+            return reportRepository.findByStatus(myStatus);
+        }
         return reportRepository.findAll();
     }
 
@@ -71,6 +75,7 @@ public class ReportController {
         reports = reportRepository.getReportsBySubmitterAndStatus(email, status);
         return reports;
     }
+
 
     @GetMapping("/reports/bylocation/{locationId}")
     @ResponseBody

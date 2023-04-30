@@ -13,6 +13,7 @@ public interface ReportRepository extends CrudRepository<Report, Integer> {
     @Query(value = "SELECT * FROM reports WHERE location_id = :locationId", nativeQuery = true)
     List<Report> findByLocationId(@Param("locationId") int locationId);
 
+    List<Report> findByStatus(Report.Status status);
     @Query(value = "SELECT * FROM reports WHERE submitter = :email", nativeQuery = true)
     List<Report> findBySubmitter(@Param("email") String email);
 

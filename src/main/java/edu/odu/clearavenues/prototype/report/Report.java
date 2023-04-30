@@ -142,6 +142,14 @@ public class Report {
     }
     public int getReportId() {return reportId;}
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public double getReportLocationLatitude() {return reportLocationLat;}
 
     public double getReportLocationLongitude() {return reportLocationLong;}
