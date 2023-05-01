@@ -51,6 +51,7 @@ public class LocationController {
         final int combinedAccidentAndReportsLast7Days = Math.min(reportRepository.getLast7DayReportCount(locationId),
                 accidentRepository.getLast7DayAccidentCount(locationId));
 
+        /*
         if (combinedAccidentAndReportsLast7Days == 0)
             location.setIntensityScore(0);
 
@@ -62,7 +63,8 @@ public class LocationController {
 
         else
             location.setIntensityScore(3);
-
+        */
+        location.setIntensityScore(combinedAccidentAndReportsLast7Days);
         locationRepository.save(location);
     }
 }
